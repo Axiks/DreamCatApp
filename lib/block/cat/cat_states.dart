@@ -23,9 +23,6 @@ class CatSuccess extends CatState {
       cats: cats ?? this.cats,
     );
   }
-
-  @override
-  List<Object> get props => [cats];
 }
 
 class CatUnsuccess extends CatState{}

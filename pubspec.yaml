@@ -29,6 +29,7 @@ dependencies:
   json_serializable: ^4.1.4
   json_annotation: ^4.0.1
   url_launcher: ^6.0.9
+  animations: ^2.0.1
 
 
   # The following adds the Cupertino Icons font to your application.

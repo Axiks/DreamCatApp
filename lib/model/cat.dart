@@ -1,6 +1,5 @@
+import 'package:dreambitcattestapp/model/cat_image.dart';
 import 'package:json_annotation/json_annotation.dart';
-
-import 'image.dart';
 
 part 'cat.g.dart';
 
@@ -13,6 +12,9 @@ class Cat{
   @JsonKey(name: "name")
   String? name;
 
+  @JsonKey(name: "description")
+  String? description;
+
   @JsonKey(name: "temperament")
   String? temperament;
 
@@ -24,6 +26,15 @@ class Cat{
 
   @JsonKey(name: "wikipedia_url")
   String? wikipediaUrl;
+
+  @JsonKey(name: "cfa_url")
+  String? cfaUrl;
+
+  @JsonKey(name: "vetstreet_url")
+  String? vetstreetUrl;
+
+  @JsonKey(name: "vcahospitals_url")
+  String? vcahospitalsUrl;
 
   @JsonKey(name: "origin")
   String? origin;
@@ -41,7 +52,7 @@ class Cat{
   int? socialNeeds;
 
   @JsonKey(name: "image")
-  Image? image;
+  CatImage? catImage;
 
   Cat();
 

@@ -1,11 +1,12 @@
-import 'package:dreambitcattestapp/block/cat_bloc.dart';
-import 'package:dreambitcattestapp/block/cat_event.dart';
-import 'package:dreambitcattestapp/block/cat_states.dart';
+import 'package:dreambitcattestapp/block/cat/cat_bloc.dart';
 import 'package:dreambitcattestapp/cat_screen.dart';
 import 'package:dreambitcattestapp/model/cat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'block/cat/cat_event.dart';
+import 'block/cat/cat_states.dart';
 
 void main() {
   runApp(MyApp());
@@ -79,8 +80,8 @@ class CatsViewWidget extends StatelessWidget {
               itemCount: cats.length,
               itemBuilder: (context, index) {
                 String imageUrl = "https://via.placeholder.com/150";
-                if(cats[index].image != null && cats[index].image!.url != null){
-                  imageUrl = cats[index].image!.url!;
+                if(cats[index].catImage != null && cats[index].catImage!.url != null){
+                  imageUrl = cats[index].catImage!.url!;
                 }
                 return ListTile(
                   leading: CircleAvatar(
@@ -99,7 +100,6 @@ class CatsViewWidget extends StatelessWidget {
                       label: Text("Wikipedia"),
                   ),
                   onTap: (){
-                    print("Pressedd tab..");
                     Navigator.push(
                         context,
                         MaterialPageRoute(

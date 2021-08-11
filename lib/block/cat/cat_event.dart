@@ -1,5 +1,3 @@
-import 'package:dreambitcattestapp/model/cat.dart';
-
 abstract class CatEvent {
   const CatEvent();
 
@@ -22,4 +20,3 @@ class GetCat extends CatEvent {
   @override
   List<Object> get props => [id];
 }
-

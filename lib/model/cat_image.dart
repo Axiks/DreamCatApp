@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'image.g.dart';
+part 'cat_image.g.dart';
 
 @JsonSerializable()
-class Image {
+class CatImage {
 
   @JsonKey(name: "id")
   String? id;
@@ -17,8 +17,8 @@ class Image {
   @JsonKey(name: "url")
   String? url;
 
-  Image();
+  CatImage();
 
-  factory Image.fromJson(Map<String, dynamic> json) => _$ImageFromJson(json);
-  Map<String, dynamic> toJson() => _$ImageToJson(this);
+  factory CatImage.fromJson(Map<String, dynamic> json) => _$CatImageFromJson(json);
+  Map<String, dynamic> toJson() => _$CatImageToJson(this);
 }
