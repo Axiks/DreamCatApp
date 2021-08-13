@@ -10,7 +10,6 @@ class ImageBlock extends Bloc<ImageEvent, ImageState> {
 
   @override
   Stream<ImageState> mapEventToState(ImageEvent event) async*{
-    print("Block map event to state: " + event.toString());
     if (event is GetImages) {
       yield* _mapGetCatImagesToState(event);
     }
@@ -19,40 +18,22 @@ class ImageBlock extends Bloc<ImageEvent, ImageState> {
     }
   }
 
-  // Stream<CatSuccess> _mapGetAllCatsToState(AllCats event) async* {
-  //   print("Get all cats");
-  //   CatRepository catRepository = CatRepository();
-  //   List<Cat> cats = await catRepository.getAll();
-  //   CatSuccess state = CatSuccess(cats: cats);
-  //   yield state;
-  // }
-
-  // Stream<CatSuccess> _mapGetCatToState(GetCat event) async* {
-  //   String catId = event.id;
-  //   print("Cat ID: " + catId.toString());
-  //   CatRepository catRepository = CatRepository();
-  //   //Fix
-  //   Cat? cat = await catRepository.getCat(catId);
-  //   List<Cat> cats = [];
-  //   if(cat != null){
-  //     cats.add(cat);
-  //   }
-  //   CatSuccess state = CatSuccess(cats: cats);
-  //   yield state;
-  // }
-
-  Stream<ImageSuccess> _mapGetCatImagesToState(GetImages event) async* {
+  Stream<ImageState> _mapGetCatImagesToState(GetImages event) async* {
     String catId = event.id;
+    ImageState state;
     CatRepository catRepository = CatRepository();
-
-    List<CatImage> images = await catRepository.getCatImages(catId);
-
-    ImageSuccess state = ImageSuccess(images: images);
+    try{
+      List<CatImage> images = await catRepository.getCatImages(catId);
+      state = ImageSuccess(images: images);
+    }
+    catch(e){
+      state = ImageUnsuccess(errorMessages: e.toString());
+    }
     yield state;
   }
 
   Stream<ImageUnsuccess> _mapUnsuccessToState() async* {
-    ImageUnsuccess state = ImageUnsuccess();
+    ImageUnsuccess state = ImageUnsuccess(errorMessages: "Unknown error");
     yield state;
   }
 

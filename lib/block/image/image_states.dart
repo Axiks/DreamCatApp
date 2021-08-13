@@ -28,4 +28,9 @@ class ImageSuccess extends ImageState {
   List<Object> get props => [images];
 }
 
-class ImageUnsuccess extends ImageState{}
+class ImageUnsuccess extends ImageState{
+  final String errorMessages;
+  const ImageUnsuccess({
+    required this.errorMessages
+  });
+}

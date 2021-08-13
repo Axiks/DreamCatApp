@@ -6,15 +6,22 @@ class HttpService{
   final baseUrl = "https://api.thecatapi.com/v1/";
 
   HttpService(){
-    _dio = Dio(BaseOptions(
-      baseUrl: baseUrl,
-    ));
+    _dio = Dio(
+        BaseOptions(
+          baseUrl: baseUrl,
+        )
+    );
 
     initializeInterceptors();
   }
 
   Future<Response> getRequest(String endPoint) async{
     Response response;
+    Dio _dio = Dio(
+        BaseOptions(
+          baseUrl: baseUrl,
+        )
+    );
 
     try{
       response = await _dio.get(endPoint);
@@ -22,7 +29,6 @@ class HttpService{
       print(e.message);
       throw Exception(e.message);
     }
-
     return response;
   }
 

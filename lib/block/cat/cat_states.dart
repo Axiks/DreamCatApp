@@ -25,4 +25,9 @@ class CatSuccess extends CatState {
   }
 }
 
-class CatUnsuccess extends CatState{}
+class CatUnsuccess extends CatState{
+  final String errorMessages;
+  const CatUnsuccess({
+    required this.errorMessages
+  });
+}

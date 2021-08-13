@@ -13,56 +13,27 @@ class CatBlock extends Bloc<CatEvent, CatState> {
     if (event is AllCats) {
       yield* _mapGetAllCatsToState(event);
     }
-    // else if (event is GetCat){
-    //   yield* _mapGetCatToState(event);
-    // }
-    // else if(event is GetCatImages){
-    //   yield* _mapGetCatImagesToState(event);
-    // }
     else{
       yield* _mapUnsuccessToState();
     }
   }
 
-  Stream<CatSuccess> _mapGetAllCatsToState(AllCats event) async* {
+  Stream<CatState> _mapGetAllCatsToState(AllCats event) async* {
+    CatState state;
     print("Get all cats");
     CatRepository catRepository = CatRepository();
-    List<Cat> cats = await catRepository.getAll();
-    CatSuccess state = CatSuccess(cats: cats);
+    try{
+      List<Cat> cats = await catRepository.getAll();
+      state = CatSuccess(cats: cats);
+    }
+    catch(e){
+      state = CatUnsuccess(errorMessages: e.toString());
+    }
     yield state;
   }
 
-  // Stream<CatSuccess> _mapGetCatToState(GetCat event) async* {
-  //   String catId = event.id;
-  //   print("Cat ID: " + catId.toString());
-  //   CatRepository catRepository = CatRepository();
-  //   //Fix
-  //   Cat? cat = await catRepository.getCat(catId);
-  //   List<Cat> cats = [];
-  //   if(cat != null){
-  //     cats.add(cat);
-  //   }
-  //   CatSuccess state = CatSuccess(cats: cats);
-  //   yield state;
-  // }
-
-  // Stream<CatSuccess> _mapGetCatImagesToState(GetCatImages event) async* {
-  //   String catId = event.id;
-  //   CatRepository catRepository = CatRepository();
-  //
-  //   List<Image?> images = await catRepository.getCatImages(catId);
-  //   //Fix
-  //   Cat? cat = await catRepository.getCat(catId);
-  //   List<Cat> cats = [];
-  //   if(cat != null){
-  //     cats.add(cat);
-  //   }
-  //   CatSuccess state = CatSuccess(cats: cats);
-  //   yield state;
-  //}
-
   Stream<CatUnsuccess> _mapUnsuccessToState() async* {
-    CatUnsuccess state = CatUnsuccess();
+    CatUnsuccess state = CatUnsuccess(errorMessages: "Unknown error");
     yield state;
   }
 

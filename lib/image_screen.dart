@@ -17,10 +17,14 @@ class ImageScreen extends StatelessWidget{
       appBar: AppBar(
         title: Text("Cat image"),
       ),
-      body: Container(
-        child: Image(
-          image: NetworkImage(image.url!),
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image(
+            image: NetworkImage(image.url!),
+          )
+        ],
       ),
     );
   }

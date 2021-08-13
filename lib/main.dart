@@ -10,11 +10,6 @@ import 'block/cat/cat_states.dart';
 
 void main() {
   runApp(MyApp());
-  // CatRepository catRepository = CatRepository();
-  // print("Cat resp start");
-  // catRepository.getAll();
-  // // catRepository.getCat();
-  // print("Cat resp end");
 }
 
 class MyApp extends StatelessWidget {
@@ -25,31 +20,25 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Home Screen'),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+  MyHomePage({Key? key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: BlocProvider<CatBlock>(
-        create: (BuildContext context) => CatBlock(CatInitial()),
-        child: CatsViewWidget(),
-      )
+    return BlocProvider<CatBlock>(
+      create: (BuildContext context) => CatBlock(CatInitial()),
+      child: CatsViewWidget(),
     );
   }
 }
@@ -62,58 +51,101 @@ class CatsViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //Get all cats
     AllCats catBlock = AllCats();
     context.read<CatBlock>().add(catBlock);
 
     return BlocBuilder<CatBlock, CatState>(
       builder: (context, state) {
         if(state is CatInitial){
-          return Text("Initial");
+          return Splash();
         }else if (state is CatUnsuccess){
-          return Text("Unsuccess");
+          String errorMessages = state.errorMessages;
+          return Scaffold(
+              body: Center(
+                  child: Text("Unsuccess: " + errorMessages)
+              )
+          );
         }else if (state is CatSuccess){
           List<Cat> cats = state.cats;
-
-          return Center(
-            child: ListView.builder(
-              itemCount: cats.length,
-              itemBuilder: (context, index) {
-                String imageUrl = "https://via.placeholder.com/150";
-                if(cats[index].catImage != null && cats[index].catImage!.url != null){
-                  imageUrl = cats[index].catImage!.url!;
-                }
-                return ListTile(
-                  leading: CircleAvatar(
-                    radius: 30.0,
-                    backgroundImage:
-                    NetworkImage(imageUrl),
-                    backgroundColor: Colors.transparent,
-                  ),
-                  title: Text(cats[index].name ?? ""),
-                  subtitle: Text(cats[index].origin ?? ""),
-                  trailing: OutlinedButton.icon(
-                      onPressed: (){
-                        launch(cats[index].wikipediaUrl.toString());
-                      },
-                      icon: Icon(Icons.http),
-                      label: Text("Wikipedia"),
-                  ),
-                  onTap: (){
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CatScreen(cat: cats[index]),
-                        ));
-                  },
-                );
-              },
+          return Scaffold(
+            appBar: AppBar(
+              title: Text("Cat Screen"),
+            ),
+            body: Center(
+              child: ListView.builder(
+                itemCount: cats.length,
+                itemBuilder: (context, index) {
+                  String imageUrl = "https://via.placeholder.com/150";
+                  if(cats[index].catImage != null && cats[index].catImage!.url != null){
+                    imageUrl = cats[index].catImage!.url!;
+                  }
+                  return ListTile(
+                    leading: CircleAvatar(
+                      radius: 30.0,
+                      backgroundImage:
+                      NetworkImage(imageUrl),
+                      backgroundColor: Colors.transparent,
+                    ),
+                    title: Text(cats[index].name ?? ""),
+                    subtitle: Text(cats[index].origin ?? ""),
+                    trailing: Visibility(
+                      visible: cats[index].wikipediaUrl != null,
+                      child: OutlinedButton.icon(
+                          onPressed: (){
+                            launch(cats[index].wikipediaUrl.toString());
+                          },
+                          icon: Icon(Icons.http),
+                          label: Text("Wikipedia"),
+                      ),
+                    ),
+                    onTap: (){
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CatScreen(cat: cats[index]),
+                          ));
+                    },
+                  );
+                },
+              ),
             ),
           );
         }else{
           return Text("Невідома помилка");
-        };
+        }
       },
+    );
+  }
+}
+
+class Splash extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/splash.png',
+                height: 64,
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              CircularProgressIndicator(),
+              SizedBox(
+                height: 40,
+              ),
+              Text("The Cat App",
+              style: TextStyle(
+                  fontWeight: FontWeight.w300,
+                  fontSize: 22
+              ),
+              )
+            ],
+          )
+      ),
     );
   }
 }
