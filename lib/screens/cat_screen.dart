@@ -23,7 +23,7 @@ class CatScreen extends StatelessWidget{
           title: Text("Cat info"),
         ),
         body: BlocProvider<ImageBloc>(
-          create: (BuildContext context) => ImageBloc(ImagesInitial())..add(GetImages(cat.id!)),
+          create: (BuildContext context) => ImageBloc()..add(GetImages(cat.id!)),
           child: CatInfoWidget(cat: cat)
         )
     );

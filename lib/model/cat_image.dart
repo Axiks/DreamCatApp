@@ -4,17 +4,9 @@ part 'cat_image.g.dart';
 
 @JsonSerializable()
 class CatImage {
-
-  @JsonKey(name: "id")
   String? id;
-
-  @JsonKey(name: "width")
   int? width;
-
-  @JsonKey(name: "height")
   int? height;
-
-  @JsonKey(name: "url")
   String? url;
 
   CatImage();

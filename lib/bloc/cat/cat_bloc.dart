@@ -5,7 +5,11 @@ import 'package:dreambitcattestapp/repository/cat_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CatBloc extends Bloc<CatsEvent, CatsState> {
-  CatBloc(CatsState catState) : super(CatsInitial());
+  final CatRepository _catRepository;
+
+  CatBloc()
+      : _catRepository = CatRepository(),
+  super(CatsInitial());
 
   @override
   Stream<CatsState> mapEventToState(CatsEvent event) async*{
@@ -13,17 +17,13 @@ class CatBloc extends Bloc<CatsEvent, CatsState> {
     if (event is GetAllCats) {
       yield* _mapGetAllCatsToState(event);
     }
-    else{
-      yield* _mapUnsuccessToState();
-    }
   }
 
   Stream<CatsState> _mapGetAllCatsToState(GetAllCats event) async* {
     CatsState state;
     print("Get all cats");
-    CatRepository catRepository = CatRepository();
     try{
-      List<Cat> cats = await catRepository.getAll();
+      List<Cat> cats = await _catRepository.getAll();
       state = CatsLoaded(cats: cats);
     }
     catch(e){
@@ -31,10 +31,4 @@ class CatBloc extends Bloc<CatsEvent, CatsState> {
     }
     yield state;
   }
-
-  Stream<CatsNotLoaded> _mapUnsuccessToState() async* {
-    CatsNotLoaded state = CatsNotLoaded(errorMessages: "Unknown error");
-    yield state;
-  }
-
 }

@@ -20,25 +20,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key}) : super(key: key);
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider<CatBloc>(
-      create: (BuildContext context) => CatBloc(CatsInitial())..add(GetAllCats()),
-      child: CatsViewWidget(),
+      home: BlocProvider<CatBloc>(
+        create: (BuildContext context) => CatBloc()..add(GetAllCats()),
+        child: CatsViewWidget(),
+      ),
     );
   }
 }
@@ -48,13 +33,12 @@ class CatsViewWidget extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CatBloc, CatsState>(
       builder: (context, state) {
         if(state is CatsInitial){
-          return Splash();
+          return LoadingWidget();
         }else if (state is CatsNotLoaded){
           String errorMessages = state.errorMessages;
           return Scaffold(
@@ -109,7 +93,7 @@ class CatsViewWidget extends StatelessWidget {
   }
 }
 
-class Splash extends StatelessWidget {
+class LoadingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -4,11 +4,17 @@ import 'package:dreambitcattestapp/model/cat.dart';
 import 'package:dreambitcattestapp/model/cat_image.dart';
 
 class CatRepository{
+  final HttpService _http;
+
+  CatRepository()
+  : _http = new HttpService();
+
   Future<List<Cat>> getAll() async {
     List<Cat> cats = [];
     try {
-      HttpService http2 = new HttpService();
-      Response response = await http2.getRequest("breeds");
+      print("Cat repository.\ngetRequest");
+      Response response = await _http.getRequest("breeds");
+      print("Cat repository.\n END getRequest");
 
       if(response.statusCode == 200){
         for (var responseCat in response.data) {
@@ -27,9 +33,7 @@ class CatRepository{
   Future<List<CatImage>> getCatImages(String id) async {
     List<CatImage> images = [];
     try {
-      // var response = await Dio().get('https://api.thecatapi.com/v1/images/search?limit=100&breed_ids=' + id);
-      HttpService http2 = new HttpService();
-      Response response = await http2.getRequest("images/search?limit=100&breed_ids=" + id);
+      Response response = await _http.getRequest("images/search?limit=100&breed_ids=" + id);
 
       if(response.statusCode == 200){
         for (var responseImage in response.data) {
