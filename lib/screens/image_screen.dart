@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'model/cat_image.dart';
+import '../model/cat_image.dart';
 
 class ImageScreen extends StatelessWidget{
   const ImageScreen({

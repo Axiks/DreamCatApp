@@ -1,16 +1,16 @@
-import 'package:animations/animations.dart';
-import 'package:dreambitcattestapp/block/image/image_event.dart';
+import 'package:dreambitcattestapp/bloc/image/image_event.dart';
+import 'package:dreambitcattestapp/widgets/horizontal_image_scroll_widget.dart';
+import 'package:dreambitcattestapp/widgets/link_item_widget.dart';
+import 'package:dreambitcattestapp/widgets/rating_bar_widget.dart';
+import 'package:dreambitcattestapp/widgets/text_item_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-import 'block/image/image_bloc.dart';
-import 'block/image/image_states.dart';
-import 'image_screen.dart';
-import 'model/cat.dart';
-import 'model/cat_image.dart';
+import '../bloc/image/image_bloc.dart';
+import '../bloc/image/image_states.dart';
+import '../model/cat.dart';
+import '../model/cat_image.dart';
 
 class CatScreen extends StatelessWidget{
   final Cat cat;
@@ -22,44 +22,34 @@ class CatScreen extends StatelessWidget{
         appBar: AppBar(
           title: Text("Cat info"),
         ),
-        body: BlocProvider<ImageBlock>(
-          create: (BuildContext context) => ImageBlock(ImageInitial()),
+        body: BlocProvider<ImageBloc>(
+          create: (BuildContext context) => ImageBloc(ImagesInitial())..add(GetImages(cat.id!)),
           child: CatInfoWidget(cat: cat)
         )
     );
   }
 }
 
-class CatInfoWidget extends StatefulWidget{
+class CatInfoWidget extends StatelessWidget{
   Cat cat;
+  CatInfoWidget({required this.cat});
 
-  CatInfoWidget({Key? key, required this.cat}) : super(key: key);
-
-  @override
-  _MyCatInfoState createState() => _MyCatInfoState();
-}
-
-class _MyCatInfoState extends State<CatInfoWidget>{
   @override
   Widget build(BuildContext context) {
-    Cat cat = widget.cat;
-    GetImages catBlock = GetImages(widget.cat.id!);
-    context.read<ImageBlock>().add(catBlock);
-
     return SingleChildScrollView(
       child: Column(
         children: [
-          BlocBuilder<ImageBlock, ImageState>(
+          BlocBuilder<ImageBloc, ImagesState>(
           builder: (context, state) {
-            if(state is ImageInitial){
+            if(state is ImagesInitial){
               return LinearProgressIndicator();
             }
-            else if(state is ImageUnsuccess){
+            else if(state is ImagesNotLoaded){
               String errorMessages = state.errorMessages;
               print("Error load Images: " + errorMessages);
               return Text("Error load Images");
             }
-            else if(state is ImageSuccess){
+            else if(state is ImagesLoaded){
               List<CatImage> images = state.images;
               return HorizontalImageScrollWidget(images: images);
             }
@@ -112,45 +102,21 @@ class _MyCatInfoState extends State<CatInfoWidget>{
                 Wrap(
                   spacing: 5,
                   children: [
-                    Visibility(
-                      visible: cat.wikipediaUrl != null,
-                      child: OutlinedButton.icon(
-                        onPressed: (){
-                          launch(cat.wikipediaUrl.toString());
-                        },
-                        icon: Icon(Icons.http),
-                        label: Text("Wikipedia"),
-                      ),
+                    LinkItemWidget(
+                      title: "Wikipedia",
+                      url: cat.wikipediaUrl,
                     ),
-                    Visibility(
-                      visible: cat.cfaUrl != null,
-                      child: OutlinedButton.icon(
-                        onPressed: (){
-                          launch(cat.cfaUrl.toString());
-                        },
-                        icon: Icon(Icons.http),
-                        label: Text("CFA"),
-                      ),
+                    LinkItemWidget(
+                      title: "CFA",
+                      url: cat.cfaUrl,
                     ),
-                    Visibility(
-                      visible: cat.vetstreetUrl != null,
-                      child: OutlinedButton.icon(
-                        onPressed: (){
-                          launch(cat.vetstreetUrl.toString());
-                        },
-                        icon: Icon(Icons.http),
-                        label: Text("vetstreet"),
-                      ),
+                    LinkItemWidget(
+                      title: "vetstreet",
+                      url: cat.vetstreetUrl,
                     ),
-                    Visibility(
-                      visible: cat.vcahospitalsUrl != null,
-                      child: OutlinedButton.icon(
-                        onPressed: (){
-                          launch(cat.vcahospitalsUrl.toString());
-                        },
-                        icon: Icon(Icons.http),
-                        label: Text("VCA"),
-                      ),
+                    LinkItemWidget(
+                      title: "VCA",
+                      url: cat.vcahospitalsUrl,
                     ),
                   ],
                 ),
@@ -248,107 +214,6 @@ class _MyCatInfoState extends State<CatInfoWidget>{
               ],
             ),
           )
-        ],
-      ),
-    );
-  }
-}
-
-class TextItemWidget extends StatelessWidget {
-  const TextItemWidget({
-    Key? key,
-    required this.title,
-    required this.body,
-  }) : super(key: key);
-
-  final String title;
-  final String? body;
-
-  @override
-  Widget build(BuildContext context) {
-    return Visibility(
-        visible: body != "",
-        child: Column(
-          children: [
-            Text(title + body.toString()),
-            SizedBox(
-              height: 16,
-            ),
-          ],
-        )
-    );
-  }
-}
-
-class RatingBarWidget extends StatelessWidget {
-  const RatingBarWidget({
-    Key? key,
-    required this.title,
-    required this.rating,
-  }) : super(key: key);
-
-  final String title;
-  final int? rating;
-
-  @override
-  Widget build(BuildContext context) {
-    return Visibility(
-        visible: rating != null,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title),
-            SizedBox(
-              height: 6,
-            ),
-            RatingBarIndicator(
-              rating: rating?.toDouble() ?? 0,
-              itemBuilder: (context, index) => Icon(
-                Icons.star,
-                color: Colors.amber,
-              ),
-              itemCount: 5,
-              itemSize: 32.0,
-              direction: Axis.horizontal,
-            ),
-            SizedBox(
-              height: 16,
-            ),
-          ],
-        )
-    );
-  }
-}
-
-class HorizontalImageScrollWidget extends StatelessWidget {
-  const HorizontalImageScrollWidget({
-    Key? key,
-    required this.images,
-  }) : super(key: key);
-
-  final List<CatImage> images;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 250,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: <Widget>[
-          for(var image in images)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                //width: 200,
-                child: OpenContainer(
-                  openBuilder: (context, _) => ImageScreen(image: image),
-                  closedBuilder: (context, _) => Image(
-                    image: NetworkImage(image.url!),
-                  ),
-                ),
-              ),
-            ),
         ],
       ),
     );

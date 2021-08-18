@@ -5,11 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'image_event.dart';
 import 'image_states.dart';
 
-class ImageBlock extends Bloc<ImageEvent, ImageState> {
-  ImageBlock(ImageState catState) : super(ImageInitial());
+class ImageBloc extends Bloc<ImageEvent, ImagesState> {
+  ImageBloc(ImagesState catState) : super(ImagesInitial());
 
   @override
-  Stream<ImageState> mapEventToState(ImageEvent event) async*{
+  Stream<ImagesState> mapEventToState(ImageEvent event) async*{
     if (event is GetImages) {
       yield* _mapGetCatImagesToState(event);
     }
@@ -18,22 +18,22 @@ class ImageBlock extends Bloc<ImageEvent, ImageState> {
     }
   }
 
-  Stream<ImageState> _mapGetCatImagesToState(GetImages event) async* {
+  Stream<ImagesState> _mapGetCatImagesToState(GetImages event) async* {
     String catId = event.id;
-    ImageState state;
+    ImagesState state;
     CatRepository catRepository = CatRepository();
     try{
       List<CatImage> images = await catRepository.getCatImages(catId);
-      state = ImageSuccess(images: images);
+      state = ImagesLoaded(images: images);
     }
     catch(e){
-      state = ImageUnsuccess(errorMessages: e.toString());
+      state = ImagesNotLoaded(errorMessages: e.toString());
     }
     yield state;
   }
 
-  Stream<ImageUnsuccess> _mapUnsuccessToState() async* {
-    ImageUnsuccess state = ImageUnsuccess(errorMessages: "Unknown error");
+  Stream<ImagesNotLoaded> _mapUnsuccessToState() async* {
+    ImagesNotLoaded state = ImagesNotLoaded(errorMessages: "Unknown error");
     yield state;
   }
 

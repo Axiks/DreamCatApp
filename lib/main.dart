@@ -1,12 +1,12 @@
-import 'package:dreambitcattestapp/block/cat/cat_bloc.dart';
-import 'package:dreambitcattestapp/cat_screen.dart';
+import 'package:dreambitcattestapp/bloc/cat/cat_bloc.dart';
+import 'screens/cat_screen.dart';
 import 'package:dreambitcattestapp/model/cat.dart';
+import 'package:dreambitcattestapp/widgets/link_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-import 'block/cat/cat_event.dart';
-import 'block/cat/cat_states.dart';
+import 'bloc/cat/cat_event.dart';
+import 'bloc/cat/cat_states.dart';
 
 void main() {
   runApp(MyApp());
@@ -36,8 +36,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<CatBlock>(
-      create: (BuildContext context) => CatBlock(CatInitial()),
+    return BlocProvider<CatBloc>(
+      create: (BuildContext context) => CatBloc(CatsInitial())..add(GetAllCats()),
       child: CatsViewWidget(),
     );
   }
@@ -51,21 +51,18 @@ class CatsViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AllCats catBlock = AllCats();
-    context.read<CatBlock>().add(catBlock);
-
-    return BlocBuilder<CatBlock, CatState>(
+    return BlocBuilder<CatBloc, CatsState>(
       builder: (context, state) {
-        if(state is CatInitial){
+        if(state is CatsInitial){
           return Splash();
-        }else if (state is CatUnsuccess){
+        }else if (state is CatsNotLoaded){
           String errorMessages = state.errorMessages;
           return Scaffold(
               body: Center(
-                  child: Text("Unsuccess: " + errorMessages)
+                  child: Text("Cats Not Loaded: " + errorMessages)
               )
           );
-        }else if (state is CatSuccess){
+        }else if (state is CatsLoaded){
           List<Cat> cats = state.cats;
           return Scaffold(
             appBar: AppBar(
@@ -88,15 +85,9 @@ class CatsViewWidget extends StatelessWidget {
                     ),
                     title: Text(cats[index].name ?? ""),
                     subtitle: Text(cats[index].origin ?? ""),
-                    trailing: Visibility(
-                      visible: cats[index].wikipediaUrl != null,
-                      child: OutlinedButton.icon(
-                          onPressed: (){
-                            launch(cats[index].wikipediaUrl.toString());
-                          },
-                          icon: Icon(Icons.http),
-                          label: Text("Wikipedia"),
-                      ),
+                    trailing: LinkItemWidget(
+                      title: "Wikipedia",
+                      url: cats[index].wikipediaUrl,
                     ),
                     onTap: (){
                       Navigator.push(
