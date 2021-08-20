@@ -13,36 +13,21 @@ class HorizontalImageScrollWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //var a = images.map((i) => null)
-    // Iterable<DataRow> dataRow = images.map((image) {
-    //   return DataRow(cells: [
-    //     DataCell(
-    //       Text(image.url.toString()),
-    //     ),
-    //     DataCell(
-    //       Text(image.width.toString()),
-    //     ),
-    //   ]);
-    // });
-
     return Container(
       height: 250,
-      child: ListView(
+      child: new ListView(
         scrollDirection: Axis.horizontal,
-        children: [
-          for(var image in images)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                child: OpenContainer(
-                  openBuilder: (context, _) => ImageScreen(image: image),
-                  closedBuilder: (context, _) => Image(
-                    image: NetworkImage(image.url!),
-                  ),
-                ),
+        children: images.map((image) => Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            child: OpenContainer(
+              openBuilder: (context, _) => ImageScreen(image: image),
+              closedBuilder: (context, _) => Image(
+                image: NetworkImage(image.url!),
               ),
             ),
-        ],
+          ),
+        )).toList(),
       ),
     );
   }
