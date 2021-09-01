@@ -13,15 +13,14 @@ class LinkItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Visibility(
-      visible: url != null,
-      child: OutlinedButton.icon(
-        onPressed: (){
-          launch(url.toString());
+    return url != null
+        ? OutlinedButton.icon(
+      onPressed: (){
+        launch(url.toString());
         },
-        icon: Icon(Icons.http),
-        label: Text(title),
-      ),
-    );
+      icon: Icon(Icons.http),
+      label: Text(title),
+    )
+        : Container();
   }
 }

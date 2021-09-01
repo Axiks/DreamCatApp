@@ -13,31 +13,30 @@ class RatingBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Visibility(
-        visible: rating != null,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title),
-            SizedBox(
-              height: 6,
+    return rating != null
+        ? Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title),
+          SizedBox(
+            height: 6,
+          ),
+          RatingBarIndicator(
+            rating: rating?.toDouble() ?? 0,
+            itemBuilder: (context, index) => Icon(
+              Icons.star,
+              color: Colors.amber,
             ),
-            RatingBarIndicator(
-              rating: rating?.toDouble() ?? 0,
-              itemBuilder: (context, index) => Icon(
-                Icons.star,
-                color: Colors.amber,
-              ),
-              itemCount: 5,
-              itemSize: 32.0,
-              direction: Axis.horizontal,
-            ),
-            SizedBox(
-              height: 16,
-            ),
-          ],
-        )
-    );
+            itemCount: 5,
+            itemSize: 32.0,
+            direction: Axis.horizontal,
+          ),
+          SizedBox(
+            height: 16,
+          ),
+        ],
+      )
+        : Container();
   }
 }

@@ -31,7 +31,7 @@ class CatScreen extends StatelessWidget{
 }
 
 class CatInfoWidget extends StatelessWidget{
-  Cat cat;
+  final Cat cat;
   CatInfoWidget({required this.cat});
 
   @override
@@ -60,16 +60,15 @@ class CatInfoWidget extends StatelessWidget{
           SizedBox(
             height: 16,
           ),
-          Visibility(
-            visible: (cat.catImage != null) && (cat.catImage!.url != null),
-            child: ClipRRect(
+          (cat.catImage != null) && (cat.catImage!.url != null)
+            ? ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
               child: CircleAvatar(
                 radius: 82,
                 backgroundImage: NetworkImage(cat.catImage?.url ?? ""),
               ),
-            ),
-          ),
+          )
+          : Container(),
           Padding(
             padding: const EdgeInsets.all(22.0),
             child: Column(
@@ -87,15 +86,15 @@ class CatInfoWidget extends StatelessWidget{
                 SizedBox(
                   height: 4,
                 ),
-                Visibility(
-                  visible: cat.origin != null,
-                  child: Center(child: Text(cat.origin ?? "",
+                cat.origin != null
+                    ? Center(
+                    child: Text(cat.origin ?? "",
                     style: TextStyle(
                         fontWeight: FontWeight.w300,
                     ),
+                    )
                   )
-                  ),
-                ),
+                : Container(),
                 SizedBox(
                   height: 16,
                 ),

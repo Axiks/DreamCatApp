@@ -12,9 +12,8 @@ class TextItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Visibility(
-        visible: body != "",
-        child: Column(
+    return body != ""
+        ? Column(
           children: [
             Text(title + body.toString()),
             SizedBox(
@@ -22,6 +21,6 @@ class TextItemWidget extends StatelessWidget {
             ),
           ],
         )
-    );
+    : Column();
   }
 }
