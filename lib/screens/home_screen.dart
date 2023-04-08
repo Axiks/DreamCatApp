@@ -63,26 +63,28 @@ class CatsListWidget extends StatelessWidget{
             if(cats[index].catImage != null && cats[index].catImage!.url != null){
               imageUrl = cats[index].catImage!.url!;
             }
-            return ListTile(
-              leading: CircleAvatar(
-                radius: 30.0,
-                backgroundImage:
-                NetworkImage(imageUrl),
-                backgroundColor: Colors.transparent,
+            return Card(
+              child: ListTile(
+                leading: CircleAvatar(
+                  radius: 30.0,
+                  backgroundImage:
+                  NetworkImage(imageUrl),
+                  backgroundColor: Colors.transparent,
+                ),
+                title: Text(cats[index].name ?? ""),
+                subtitle: Text(cats[index].origin ?? ""),
+                trailing: LinkItemWidget(
+                  title: "Wikipedia",
+                  url: cats[index].wikipediaUrl,
+                ),
+                onTap: (){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CatScreen(cat: cats[index]),
+                      ));
+                },
               ),
-              title: Text(cats[index].name ?? ""),
-              subtitle: Text(cats[index].origin ?? ""),
-              trailing: LinkItemWidget(
-                title: "Wikipedia",
-                url: cats[index].wikipediaUrl,
-              ),
-              onTap: (){
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CatScreen(cat: cats[index]),
-                    ));
-              },
             );
           },
         ),

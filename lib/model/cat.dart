@@ -80,6 +80,9 @@ class Cat{
   @JsonKey(name: "image")
   CatImage? catImage;
 
+  @JsonKey(name: "reference_image_id")
+  String? referenceImageId;
+
   Cat();
 
   factory Cat.fromJson(Map<String, dynamic> json) => _$CatFromJson(json);

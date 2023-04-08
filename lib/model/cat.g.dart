@@ -42,6 +42,7 @@ Cat _$CatFromJson(Map<String, dynamic> json) {
     ..suppressedTail = json['suppressed_tail'] as int?
     ..shortLegs = json['short_legs'] as int?
     ..hypoallergenic = json['hypoallergenic'] as int?
+    ..referenceImageId = json['reference_image_id'] as String?
     ..catImage = json['image'] == null
         ? null
         : CatImage.fromJson(json['image'] as Map<String, dynamic>);
@@ -83,4 +84,5 @@ Map<String, dynamic> _$CatToJson(Cat instance) => <String, dynamic>{
       'short_legs': instance.shortLegs,
       'hypoallergenic': instance.hypoallergenic,
       'image': instance.catImage,
+      'reference_image_id': instance.referenceImageId
     };
